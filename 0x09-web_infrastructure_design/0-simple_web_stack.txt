@@ -1,0 +1,74 @@
+# Simple Web Infrastructure Design: One Server Stack for www.foobar.com
+
+## Scenario:
+A user opens their web browser and types `www.foobar.com`. Here's how the request is handled step by step:
+
+---
+
+## Components:
+
+1. **Server**
+   - A single machine (physical or virtual) with an IP address of **8.8.8.8**
+   - Hosts all components: web server, application server, database, and code
+
+2. **Domain Name**
+   - `foobar.com` is registered with a domain registrar
+   - A **DNS A Record** for `www.foobar.com` maps to IP `8.8.8.8`
+
+3. **Web Server (Nginx)**
+   - Listens on port 80 (HTTP) or 443 (HTTPS)
+   - Handles incoming user requests
+   - Serves static files (HTML, CSS, JS)
+   - Passes dynamic requests to the application server
+
+4. **Application Server**
+   - Runs backend code (e.g., Node.js, Python Flask, PHP)
+   - Receives requests from Nginx
+   - Executes application logic
+
+5. **Application Files**
+   - Codebase of the website (e.g., `.js`, `.py`, `.php` files)
+   - Handles features like login, data retrieval, processing
+
+6. **Database (MySQL)**
+   - Stores user data, posts, product info, etc.
+   - Responds to SQL queries from the application server
+
+---
+
+## DNS and Networking:
+
+- **DNS Record Type:** `A` record (maps `www.foobar.com` to `8.8.8.8`)
+- **Communication Protocol:** HTTP/HTTPS over TCP/IP
+
+---
+
+## Roles Summary:
+
+- **Server:** Hosts all components of the stack
+- **Domain Name:** Maps human-readable name to server IP
+- **DNS (A record):** Directs `www.foobar.com` to `8.8.8.8`
+- **Web Server (Nginx):** Handles requests, serves static content, routes dynamic ones
+- **Application Server:** Processes backend logic
+- **Database (MySQL):** Stores and serves persistent data
+
+---
+
+## Limitations of This Infrastructure:
+
+1. **Single Point of Failure (SPOF):**
+   - If the server goes down, the whole website becomes unreachable
+
+2. **No Scalability:**
+   - Cannot handle large traffic spikes (limited CPU/RAM on one server)
+
+3. **Downtime During Maintenance:**
+   - Updating app code or restarting Nginx causes brief service interruption
+
+4. **Performance Bottleneck:**
+   - All components share resources on one server
+
+---
+
+## Diagram (Conceptual):
+
