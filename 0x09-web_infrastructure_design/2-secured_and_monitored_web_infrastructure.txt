@@ -1,0 +1,49 @@
+Image: https://i.imgur.com/example-link.png
+
+Explanation:
+
+This design includes:
+- 3 servers (2 Web/App Servers + 1 Load Balancer)
+- HTTPS termination at the Load Balancer (SSL certificate installed on HAProxy)
+- 3 firewalls (one for each server)
+- 3 monitoring clients (one on each server)
+
+---
+
+🔐 **Why each component is added:**
+
+- **SSL Certificate**: Secures data in transit by encrypting communication between the client and server.
+- **Firewalls**: Protect servers by blocking unwanted incoming/outgoing traffic, based on defined rules.
+- **Monitoring Clients (e.g., SumoLogic agent, Prometheus Node Exporter)**: Collect metrics, logs, and alerts about server health, performance, CPU, memory, QPS, etc.
+
+---
+
+💡 **How monitoring works:**
+- Each server runs a **monitoring agent**.
+- These agents collect system metrics and send them to a centralized service (e.g., SumoLogic).
+- Logs and metrics are visualized in dashboards, and alerts can be configured for anomalies.
+
+---
+
+📊 **To monitor QPS (Queries Per Second)**:
+- Configure the monitoring agent to track request logs (e.g., Nginx access logs or app logs).
+- Use log analysis or a custom script to count the number of requests per second.
+- Visualize on a dashboard or set alerts for thresholds.
+
+---
+
+⚠️ **Issues with this setup:**
+
+1. **SSL Termination at Load Balancer**:
+   - SSL decryption happens at the LB.
+   - If traffic between LB and app servers is not re-encrypted, it becomes vulnerable to internal threats.
+
+2. **Single MySQL Write Node**:
+   - Only the **Primary DB** can accept writes.
+   - If it fails, write operations are disrupted unless automatic failover is configured.
+
+3. **Identical components on all servers**:
+   - If each server runs **Web, App, and DB** (monolith), it increases resource usage.
+   - Makes horizontal scaling harder.
+   - Can introduce inconsistencies during updates or failures.
+
