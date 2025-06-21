@@ -1,0 +1,45 @@
+Image: https://i.imgur.com/example-diagram-link.png
+
+Explanation:
+
+We are hosting www.foobar.com using a distributed infrastructure of 3 servers:
+
+1. **Load Balancer (HAProxy)**:
+   - Sits in front of the servers.
+   - Distributes incoming traffic using **Round Robin** algorithm, which evenly rotates requests across servers.
+
+2. **Web/Application Servers (2)**:
+   - Each server runs Nginx as the **web server** and also hosts the application files (backend logic).
+   - This setup helps in load distribution and provides **redundancy**.
+
+3. **Database Setup (Primary-Replica)**:
+   - One server acts as **Primary** (Master) DB: handles **write** operations.
+   - One server acts as **Replica** (Slave) DB: handles **read** operations and syncs from Primary.
+   - Ensures **data redundancy** and can reduce read load.
+
+---
+
+**Why each component is added**:
+- **Load Balancer**: To distribute traffic, reduce load on any single server, and increase availability.
+- **2 Web/App Servers**: To handle more users and prevent downtime if one crashes.
+- **Database Replica**: For fault-tolerance, scalability, and offloading read operations from primary.
+
+---
+
+**Active-Active vs Active-Passive**:
+- **This setup is Active-Active** for web/app servers: both process requests simultaneously.
+- In contrast, **Active-Passive** means one server is standby and only activates if the main fails.
+
+---
+
+**Primary vs Replica DB**:
+- **Primary (Master)**: Accepts writes, updates.
+- **Replica (Slave)**: Only reads; syncs data from Primary.
+- Application reads from both but writes only to Primary.
+
+---
+
+**Issues**:
+- **SPOF**: Load balancer is still a single point of failure.
+- **Security**: No firewall, no HTTPS = vulnerable to attacks and eavesdropping.
+- **No Monitoring**: No way to detect failure or performance degradation proactively.
