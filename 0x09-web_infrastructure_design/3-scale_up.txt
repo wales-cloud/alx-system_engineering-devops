@@ -1,0 +1,49 @@
+Image: https://i.imgur.com/example-diagram.png
+
+Explanation:
+
+We scaled the previous infrastructure by introducing the following key changes:
+
+---
+
+🔧 **New Components Added:**
+
+1. **Additional Load Balancer (HAProxy LB2)**:
+   - Works in **active-passive cluster** mode with LB1.
+   - If LB1 fails, LB2 automatically takes over.
+   - Ensures **High Availability (HA)** at the entry point.
+
+2. **Split Component Servers**:
+   - **Web Server (Nginx)**: Handles static files and HTTP requests.
+   - **Application Server**: Handles business logic (e.g., Node.js, Flask).
+   - **MySQL Server**: Dedicated to managing structured data.
+
+---
+
+📦 **Why this architecture?**
+
+- **High Availability**: Two HAProxy instances prevent SPOF at the load balancer level.
+- **Separation of Concerns**:
+  - Web, App, and DB are isolated to optimize performance, scalability, and maintenance.
+- **Scalability**:
+  - Each component can scale independently (e.g., add more app servers without touching the DB).
+
+---
+
+💡 **Application Server vs Web Server**:
+- **Web Server (Nginx)** serves static content and acts as a reverse proxy.
+- **Application Server** handles dynamic processing and API logic.
+
+---
+
+🛠️ **How Failover Works**:
+- LB2 uses heartbeat checks (e.g., with keepalived) to detect LB1 failure.
+- When LB1 is down, LB2 takes over routing traffic to the app.
+
+---
+
+📌 **Benefit of Splitting Roles**:
+- **Performance**: Avoid resource competition.
+- **Maintainability**: Easier debugging and deployment per layer.
+- **Security**: More fine-grained firewall and access control policies.
+
